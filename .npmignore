@@ -1,0 +1,8 @@
+node_modules/
+.prettierrc.json
+.eslint.config.mjs
+example/
+docs/
+roadmap.md
+tests/
+src/

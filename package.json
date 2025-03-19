@@ -1,0 +1,47 @@
+{
+	"name": "@laranatech/lareq",
+	"version": "1.0.0",
+	"description": "Larana render queue (LaReQ)",
+	"keywords": [
+		"larana",
+		"render",
+		"rendering",
+		"queue",
+		"UI",
+		"drawing",
+		"painting"
+	],
+	"license": "MIT",
+	"author": "Evgenii Kucheriavyi",
+	"type": "module",
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		"import": "./dist/index.js",
+		"require": "./dist/index.cjs"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/laranatech/lareq.git"
+	},
+	"scripts": {
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+		"ts-check": "tsc --noEmit",
+		"check": "npm run lint & npm run ts-check",
+		"build": "tsup",
+		"publish": "npm run build & npm publish --access=public"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.21.0",
+		"eslint": "^9.21.0",
+		"globals": "^16.0.0",
+		"tsup": "^8.4.0",
+		"typescript": "^5.7.3",
+		"typescript-eslint": "^8.25.0",
+		"vitest": "^3.0.7"
+	}
+}
