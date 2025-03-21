@@ -1,5 +1,7 @@
 export type LineCap = 'butt' | 'round' | 'square'
 
+export type LineJoin = 'round' | 'bevel' | 'miter'
+
 export type TextBaseline = 'top' | 'hanging' | 'middle' | 'alphabetic' | 'ideographic' | 'bottom'
 
 export type TextAlign = 'left' | 'right' | 'center' | 'start' | 'end'
@@ -13,6 +15,8 @@ export type Style = {
 	textBaseline?: TextBaseline
 	textAlign?: TextAlign
 	radius?: number
+	lineDashOffset?: number
+	lineJoin?: LineJoin
 }
 
 export type CommandOptions = {
@@ -24,15 +28,14 @@ export type CommandOptions = {
 	textBaseline?: TextBaseline
 	textAlign?: TextAlign
 	radius?: number
+	lineDashOffset?: number
+	lineJoin?: LineJoin
 }
 
 export const mapStyleToOptions = (style: Style): CommandOptions => ({
+	...style,
 	fillStyle: style.bg || '',
 	lineCap: style.borderCap || 'square',
 	lineWidth: style.borderWidth || 0,
 	strokeStyle: style.borderColor || '',
-	font: style.font || '',
-	textBaseline: style.textBaseline || 'alphabetic',
-	textAlign: style.textAlign || 'start',
-	radius: style.radius || 0,
 })

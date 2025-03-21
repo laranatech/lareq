@@ -1,12 +1,11 @@
 import {
+	arc,
 	beginPath,
 	clip,
 	closePath,
 	drawImage,
-	lineTo,
-	moveTo,
-	quadraticCurveTo,
 	restore,
+	roundedRect,
 	save,
 } from '..'
 import { Box } from '../../types'
@@ -19,40 +18,25 @@ export type ImageOpts = {
 	customShape?: (queue: RenderQueue, opts: ImageOpts) => void
 }
 
-export const image = (options: ImageOpts) => {
-	const roundedImageSquare = (queue: RenderQueue, opts: ImageOpts) => {
-		const { box, radius = 0 } = opts
-		const { x, y, w, h } = box
+export const roundedImage = (queue: RenderQueue, opts: ImageOpts) => {
+	const { box, radius = 0 } = opts
+	const { x, y } = box
 
-		if (box.h === box.w && radius >= box.h / 2) {
-			return
-		}
+	beginPath().to(queue)
 
-		beginPath().to(queue)
-		moveTo({ x: x + radius, y }).to(queue)
-		lineTo({ x: x + w - radius, y }).to(queue)
-		quadraticCurveTo({
-			p: { x: x + w, y },
-			c: { x: x + w, y: y + radius },
-		}).to(queue)
-		lineTo({ x: x + w, y: y + h - radius }).to(queue)
-		quadraticCurveTo({
-			p: { x: x + w, y: y + h },
-			c: { x: x + w - radius, y: y -h },
-		}).to(queue)
-		lineTo({ x: x + radius, y: y + h }).to(queue)
-		quadraticCurveTo({
-			p: { x, y: y + h },
-			c: { x, y: y + h - radius },
-		}).to(queue)
-		lineTo({ x, y: y + radius }).to(queue)
-		quadraticCurveTo({
-			p: { x, y },
-			c: { x: x + radius, y },
-		}).to(queue)
+	const halfWidth = box.w / 2
+
+	if (box.h === box.w && radius >= halfWidth) {
+		arc({ x: x + halfWidth, y: y + halfWidth, radius: halfWidth }).to(queue)
 		closePath().to(queue)
+		return
 	}
 
+	roundedRect({ ...box, radius }).to(queue)
+	closePath().to(queue)
+}
+
+export const image = (options: ImageOpts) => {
 	return {
 		to: (queue: RenderQueue) => {
 			let wasSaved = false
@@ -64,7 +48,8 @@ export const image = (options: ImageOpts) => {
 				clip().to(queue)
 			} else if (options.radius) {
 				save().to(queue)
-				roundedImageSquare(queue, options)
+				wasSaved = true
+				roundedImage(queue, options)
 				clip().to(queue)
 			}
 
