@@ -17,7 +17,7 @@ export const arc = makeCommand<ArcOpts>((options: ArcOpts): RenderCommand => {
 			...options,
 			start: options.start || 0,
 			end: options.end || Math.PI * 2,
-			counterclockwise: options.counterclockwise ?? false,
+			counterclockwise: options.counterclockwise || false,
 		}
 	}
 })
