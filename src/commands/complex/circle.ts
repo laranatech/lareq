@@ -4,7 +4,7 @@ import { RenderQueue } from '../../queue'
 import { beginPath } from '../primitives/begin-path'
 import { closePath } from '../primitives/close-path'
 import { fill } from '../primitives/fill'
-import { setCtx } from '../primitives/setCtx'
+import { setCtx } from '../primitives/set-ctx'
 import { stroke } from '../primitives/stroke'
 
 export type CircleOpts = {

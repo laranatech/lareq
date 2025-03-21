@@ -4,7 +4,9 @@ import { Point } from '../../types'
 import { RenderQueue } from '../../queue'
 import { arrowHead } from './arrow-head'
 
-export type ArrowOpts = LineOpts
+export type ArrowOpts = LineOpts & {
+	headLength?: number
+}
 
 export const arrow = (options: ArrowOpts) => {
 	return {
@@ -20,7 +22,7 @@ export const arrow = (options: ArrowOpts) => {
 			arrowHead({
 				tip: lastPoint,
 				d: { x: lastPoint.x - prevPoint.x, y: lastPoint.y - prevPoint.y },
-				length: 8, // TODO: add option
+				length: options.headLength || 8,
 			}).to(queue)
 
 			if (options.options.strokeStyle) {

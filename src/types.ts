@@ -1,11 +1,3 @@
-export type ShapeType =
-	| 'shape'
-	| 'rect'
-	| 'line'
-	| 'image'
-	| 'circle'
-	| 'arrow'
-
 export type Box = {
 	x: number
 	y: number
