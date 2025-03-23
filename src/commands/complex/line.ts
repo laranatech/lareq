@@ -1,5 +1,4 @@
 import { LinePoint, PointType } from '../../points'
-import { arcTo, beginPath, bezierQurveTo, closePath, fill, lineTo, moveTo, quadraticCurveTo, setCtx, stroke } from '..'
 import { CommandOptions } from '../../style'
 import { RenderQueue } from '../../queue'
 
@@ -9,29 +8,30 @@ export type LineOpts = {
 }
 
 export const line = (options: LineOpts) => {
-	const methods: Record<PointType, CallableFunction> = {
-		'point': lineTo,
-		'arcPoint': arcTo,
-		'movePoint': moveTo,
-		'bezierCurvePoint': bezierQurveTo,
-		'quadraticCurvePoint': quadraticCurveTo,
-	}
-
 	return {
-		to: (queue: RenderQueue) => {
-			setCtx(options.options).to(queue)
-			beginPath().to(queue)
+		to: (q: RenderQueue) => {
+			const methods: Record<PointType, CallableFunction> = {
+				'point': q.command.lineTo,
+				'arcPoint': q.command.arcTo,
+				'movePoint': q.command.moveTo,
+				'bezierCurvePoint': q.command.bezierQurveTo,
+				'quadraticCurvePoint': q.command.quadraticCurveTo,
+			}
+
+			q.command.setCtx(options.options)
+			q.command.beginPath()
+
 			options.points.forEach((p) => {
-				methods[p.type](p).to(queue)
+				methods[p.type](p)
 			})
 
 			if (options.options.strokeStyle) {
-				stroke().to(queue)
+				q.command.stroke()
 			}
 			if (options.options.fillStyle) {
-				fill().to(queue)
+				q.command.fill()
 			}
-			closePath().to(queue)
+			q.command.closePath()
 		},
 	}
 }

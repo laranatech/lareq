@@ -1,6 +1,4 @@
 import { Box } from '../../types'
-import { RenderCommand } from '../../queue'
-import { makeCommand } from '../make-command'
 
 export type DrawSpriteOpts = {
 	img: string
@@ -8,6 +6,4 @@ export type DrawSpriteOpts = {
 	destination: Box
 }
 
-export const drawSprite = makeCommand<DrawSpriteOpts>(
-	(options: DrawSpriteOpts): RenderCommand => ({ command: 'drawSprite', options })
-)
+export const drawSprite = (o: DrawSpriteOpts): DrawSpriteOpts => o

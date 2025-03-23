@@ -1,29 +1,11 @@
-import { RenderCommand, RenderQueue } from '../queue'
+import { CommandByte } from './bytes'
+import { CommandType } from '.'
 
-export const makeCommand = <T>(method: (options: T) => RenderCommand) => {
-	return (options: T) => {
-		const result: RenderCommand = method(options)
-
-		return {
-			result,
-			to: (queue: RenderQueue) => {
-				queue.add(result.command, result.options)
-			},
-		}
-	}
-}
-
-export const makeComplexCommand = <T>(method: (options: T) => RenderCommand[]) => {
-	return (options: T) => {
-		const result: RenderCommand[] = method(options)
-
-		return {
-			result,
-			to: (queue: RenderQueue) => {
-				result.forEach((item: RenderCommand) => {
-					queue.add(item.command, item.options)
-				})
-			},
-		}
-	}
+export const makeCommand = <T>(method: (options: T) => T) => {
+	const commandType = method.name as CommandType
+	const c = CommandByte[commandType]
+	return (options: T) => ({
+		c,
+		o: method(options),
+	})
 }

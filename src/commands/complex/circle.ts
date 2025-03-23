@@ -1,11 +1,6 @@
-import { ArcOpts, arc } from '../primitives/arc'
+import { ArcOpts } from '../primitives/arc'
 import { CommandOptions } from '../../style'
 import { RenderQueue } from '../../queue'
-import { beginPath } from '../primitives/begin-path'
-import { closePath } from '../primitives/close-path'
-import { fill } from '../primitives/fill'
-import { setCtx } from '../primitives/set-ctx'
-import { stroke } from '../primitives/stroke'
 
 export type CircleOpts = {
 	arc: ArcOpts
@@ -14,20 +9,20 @@ export type CircleOpts = {
 
 export const circle = (opts: CircleOpts) => {
 	return {
-		to: (queue: RenderQueue) => {
-			beginPath().to(queue)
-			setCtx(opts.options).to(queue)
+		to: (q: RenderQueue) => {
+			q.command.beginPath()
+			q.command.setCtx(opts.options)
 
-			arc(opts.arc).to(queue)
+			q.command.arc(opts.arc)
 
 			if (opts.options.strokeStyle) {
-				stroke().to(queue)
+				q.command.stroke()
 			}
 			if (opts.options.fillStyle) {
-				fill().to(queue)
+				q.command.fill()
 			}
 
-			closePath().to(queue)
+			q.command.closePath()
 		},
 	}
 }

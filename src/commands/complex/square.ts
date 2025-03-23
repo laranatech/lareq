@@ -1,4 +1,3 @@
-import { beginPath, closePath, fill, rect, roundedRect, setCtx, stroke } from '..'
 import { Box } from '../../types'
 import { CommandOptions } from '../../style'
 import { RenderQueue } from '../../queue'
@@ -10,24 +9,24 @@ export type SquareOpts = {
 
 export const square = (opts: SquareOpts) => {
 	return {
-		to: (queue: RenderQueue) => {
-			beginPath().to(queue)
-			setCtx(opts.options).to(queue)
+		to: (q: RenderQueue) => {
+			q.command.beginPath()
+			q.command.setCtx(opts.options)
 
 			if (opts.options.radius) {
-				roundedRect({ ...opts.box, radius: opts.options.radius}).to(queue)
+				q.command.roundedRect({ ...opts.box, radius: opts.options.radius})
 			} else {
-				rect(opts.box).to(queue)
+				q.command.rect(opts.box)
 			}
 
 			if (opts.options.strokeStyle) {
-				stroke().to(queue)
+				q.command.stroke()
 			}
 			if (opts.options.fillStyle) {
-				fill().to(queue)
+				q.command.fill()
 			}
 
-			closePath().to(queue)
+			q.command.closePath()
 		},
 	}
 }

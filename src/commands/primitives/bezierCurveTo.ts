@@ -1,6 +1,4 @@
 import { Point } from '../../types'
-import { RenderCommand } from '../../queue'
-import { makeCommand } from '../make-command'
 
 export type BezierQurveToOpts = {
 	c1: Point
@@ -8,6 +6,4 @@ export type BezierQurveToOpts = {
 	p: Point
 }
 
-export const bezierQurveTo = makeCommand<BezierQurveToOpts>(
-	(options: BezierQurveToOpts): RenderCommand => ({ command: 'bezierQurveTo', options })
-)
+export const bezierQurveTo = (o: BezierQurveToOpts): BezierQurveToOpts => o

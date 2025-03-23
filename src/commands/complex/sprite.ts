@@ -1,42 +1,36 @@
-import {
-	clip,
-	drawSprite,
-	restore,
-	roundedImage,
-	save,
-} from '..'
 import { Box } from '../../types'
 import { RenderQueue } from '../../queue'
+import { roundedImage } from './image'
 
 export type SpriteOpts = {
 	img: string
 	destination: Box
 	source: Box
 	radius?: number
-	customShape?: (queue: RenderQueue, opts: SpriteOpts) => void
+	customShape?: (q: RenderQueue, opts: SpriteOpts) => void
 }
 
 export const sprite = (options: SpriteOpts) => {
 	return {
-		to: (queue: RenderQueue) => {
+		to: (q: RenderQueue) => {
 			let wasSaved = false
 
 			if (options.customShape) {
-				save().to(queue)
+				q.command.save()
 				wasSaved = true
-				options.customShape(queue, options)
-				clip().to(queue)
+				options.customShape(q, options)
+				q.command.clip()
 			} else if (options.radius) {
-				save().to(queue)
+				q.command.save()
 				wasSaved = true
-				roundedImage(queue, { img: options.img, box: options.destination, radius: options.radius })
-				clip().to(queue)
+				roundedImage(q, { img: options.img, box: options.destination, radius: options.radius })
+				q.command.clip()
 			}
 
-			drawSprite(options).to(queue)
+			q.command.drawSprite(options)
 
 			if (wasSaved) {
-				restore().to(queue)
+				q.command.restore()
 			}
 		},
 	}
