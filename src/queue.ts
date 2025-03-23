@@ -1,18 +1,54 @@
-import { CommandType } from './commands'
+import { CommandType, primitives } from './commands'
+import { makeCommand } from './commands/make-command'
 
 export type RenderCommand = {
-	command: CommandType
-	options?: unknown
+	/**\
+	 * Command name
+	 */
+	c: number
+	/**\
+	 * Command options
+	 */
+	o?: unknown
 }
 
 export class RenderQueue {
 	commands: RenderCommand[] = []
 
-	add(command: CommandType, options: unknown) {
-		this.commands.push({ command, options })
+	command = this.createCommands(primitives)
+
+	createCommands(commands: typeof primitives): typeof primitives {
+		const makeQueueCommand = <T>(command: (o: T) => T) => {
+			const c = makeCommand(command)
+			return (o: T) => {
+				const r = c(o)
+				this.add(r.c, r.o)
+				return o
+			}
+		}
+		const result: typeof primitives = {
+			...primitives,
+		}
+
+		Object.entries(commands).forEach(([key, value]) => {
+			const name = key as CommandType
+			const command = value as typeof primitives[typeof name]
+
+			// TODO: fix typing
+			//@ts-expect-error
+			result[name] = makeQueueCommand<ReturnType<typeof command>>(command)
+		})
+
+		return result
+	}
+
+	add(c: number, o: unknown) {
+		this.commands.push({ c, o })
 	}
 
 	json() {
 		return this.commands
 	}
+
+	compress() {}
 }

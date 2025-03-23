@@ -1,3 +1,8 @@
+# 1.1.0
+
+- commands encapsulated to `RenderQueue`
+- `CommandType` mapped to bytes
+
 # 1.0.1
 
 - export all types

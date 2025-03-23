@@ -1,4 +1,3 @@
-import { lineTo, moveTo } from '..'
 import { Point } from '../../types'
 import { RenderQueue } from '../../queue'
 import { point } from '../../points'
@@ -11,7 +10,7 @@ export type ArrowHeadOpts = {
 
 export const arrowHead = (options: ArrowHeadOpts) => {
 	return {
-		to: (queue: RenderQueue) => {
+		to: (q: RenderQueue) => {
 			const { d, tip, length } = options
 
 			let first = point(tip.x, tip.y)
@@ -27,9 +26,9 @@ export const arrowHead = (options: ArrowHeadOpts) => {
 				last = point(tip.x + length * delta, tip.y - length)
 			}
 
-			moveTo(first).to(queue)
-			lineTo(tip).to(queue)
-			lineTo(last).to(queue)
+			q.command.moveTo(first)
+			q.command.lineTo(tip)
+			q.command.lineTo(last)
 		},
 	}
 }

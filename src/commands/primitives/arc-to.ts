@@ -1,6 +1,4 @@
 import { Point } from '../../types'
-import { RenderCommand } from '../../queue'
-import { makeCommand } from '../make-command'
 
 export type ArcToOpts = {
 	a: Point
@@ -8,6 +6,4 @@ export type ArcToOpts = {
 	radius: number
 }
 
-export const arcTo = makeCommand<ArcToOpts>(
-	(options: ArcToOpts): RenderCommand => ({ command: 'arcTo', options })
-)
+export const arcTo = (o: ArcToOpts): ArcToOpts => o

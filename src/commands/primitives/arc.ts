@@ -1,6 +1,3 @@
-import { RenderCommand } from '../../queue'
-import { makeCommand } from '../make-command'
-
 export type ArcOpts = {
 	radius: number
 	x: number
@@ -10,14 +7,12 @@ export type ArcOpts = {
 	counterclockwise?: boolean,
 }
 
-export const arc = makeCommand<ArcOpts>((options: ArcOpts): RenderCommand => {
+export const arc = (o: ArcOpts): ArcOpts => {
 	return {
-		command: 'arc',
-		options: {
-			...options,
-			start: options.start || 0,
-			end: options.end || Math.PI * 2,
-			counterclockwise: options.counterclockwise || false,
-		}
+		...o,
+		start: o.start || 0,
+		end: o.end || Math.PI * 2,
+		counterclockwise: o.counterclockwise || false,
 	}
-})
+}
+
