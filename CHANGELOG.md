@@ -1,3 +1,11 @@
+# 1.1.1
+
+- minified build
+- `pattern` style property
+- `ellipse` primitive
+- code of conduct
+- contributing
+
 # 1.1.0
 
 - commands encapsulated to `RenderQueue`

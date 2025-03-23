@@ -17,6 +17,7 @@ export type Style = {
 	radius?: number
 	lineDashOffset?: number
 	lineJoin?: LineJoin
+	pattern?: string
 }
 
 export type CommandOptions = {
@@ -30,6 +31,7 @@ export type CommandOptions = {
 	radius?: number
 	lineDashOffset?: number
 	lineJoin?: LineJoin
+	pattern?: string
 }
 
 export const mapStyleToOptions = (style: Style): CommandOptions => ({

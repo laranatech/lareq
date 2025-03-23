@@ -7,6 +7,7 @@ import { clip } from './clip'
 import { closePath } from './close-path'
 import { drawImage } from './draw-image'
 import { drawSprite } from './draw-sprite'
+import { ellipse } from './ellipse'
 import { fill } from './fill'
 import { fillText } from './fillText'
 import { lineTo } from './line-to'
@@ -39,6 +40,7 @@ export const primitives = {
 	closePath,
 	drawImage,
 	drawSprite,
+	ellipse,
 	fill,
 	fillText,
 	lineTo,
@@ -71,6 +73,7 @@ export * from './clip'
 export * from './close-path'
 export * from './draw-image'
 export * from './draw-sprite'
+export * from './ellipse'
 export * from './fill'
 export * from './fillText'
 export * from './line-to'

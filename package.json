@@ -1,6 +1,6 @@
 {
 	"name": "@laranatech/lareq",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "Larana render queue (LaReQ)",
 	"keywords": [
 		"larana",
@@ -33,7 +33,7 @@
 		"ts-check": "tsc --noEmit",
 		"check": "npm run lint & npm run ts-check",
 		"build": "tsup",
-		"publish": "npm run build & npm publish --access=public"
+		"publish": "npm publish --access=public"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.21.0",
