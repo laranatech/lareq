@@ -1,3 +1,7 @@
+# 1.1.2
+
+- removed junk from dist
+
 # 1.1.1
 
 - minified build
