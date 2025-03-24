@@ -1,9 +1,8 @@
 import { CommandByte } from './bytes'
 import { CommandType } from '.'
 
-export const makeCommand = <T>(method: (options: T) => T) => {
-	const commandType = method.name as CommandType
-	const c = CommandByte[commandType]
+export const makeCommand = <T>(name: CommandType, method: (options: T) => T) => {
+	const c = CommandByte[name]
 	return (options: T) => ({
 		c,
 		o: method(options),

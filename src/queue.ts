@@ -18,8 +18,8 @@ export class RenderQueue {
 	command = this.createCommands(primitives)
 
 	createCommands(commands: typeof primitives): typeof primitives {
-		const makeQueueCommand = <T>(command: (o: T) => T) => {
-			const c = makeCommand(command)
+		const makeQueueCommand = <T>(name: CommandType, command: (o: T) => T) => {
+			const c = makeCommand(name, command)
 			return (o: T) => {
 				const r = c(o)
 				this.add(r.c, r.o)
@@ -35,8 +35,8 @@ export class RenderQueue {
 			const command = value as typeof primitives[typeof name]
 
 			// TODO: fix typing
-			//@ts-expect-error
-			result[name] = makeQueueCommand<ReturnType<typeof command>>(command)
+			//@ts-expect-error todo: fix error
+			result[name] = makeQueueCommand<ReturnType<typeof command>>(name, command)
 		})
 
 		return result
@@ -52,3 +52,5 @@ export class RenderQueue {
 
 	compress() {}
 }
+
+new RenderQueue()

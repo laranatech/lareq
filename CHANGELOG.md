@@ -1,3 +1,7 @@
+# 1.1.3
+
+- fixed: build
+
 # 1.1.2
 
 - removed junk from dist
