@@ -1,3 +1,7 @@
+# 1.1.4
+
+- fixed: complex commands
+
 # 1.1.3
 
 - fixed: build

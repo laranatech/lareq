@@ -1,4 +1,4 @@
-import { CommandType, primitives } from './commands'
+import { CommandType, complex, primitives } from './commands'
 import { makeCommand } from './commands/make-command'
 
 export type RenderCommand = {
@@ -17,6 +17,29 @@ export class RenderQueue {
 
 	command = this.createCommands(primitives)
 
+	complex = this.createComplexCommands(complex)
+
+	createComplexCommands(commands: typeof complex) {
+		const makeQueueCommand = <T>(command: (o: T) => { to: (q: RenderQueue) => void }) => {
+			return (o: T) => {
+				command(o).to(this)
+			}
+		}
+
+		const result: typeof complex = { ...complex }
+
+		Object.entries(commands).forEach(([key, value]) => {
+			const name = key as keyof typeof complex
+			const command = value as typeof complex[typeof name]
+
+			// TODO: fix typing
+			//@ts-expect-error todo: fix error
+			result[name] = makeQueueCommand<ReturnType<typeof command>>(command)
+		})
+
+		return result
+	}
+
 	createCommands(commands: typeof primitives): typeof primitives {
 		const makeQueueCommand = <T>(name: CommandType, command: (o: T) => T) => {
 			const c = makeCommand(name, command)
@@ -26,9 +49,7 @@ export class RenderQueue {
 				return o
 			}
 		}
-		const result: typeof primitives = {
-			...primitives,
-		}
+		const result: typeof primitives = { ...primitives }
 
 		Object.entries(commands).forEach(([key, value]) => {
 			const name = key as CommandType
@@ -52,5 +73,3 @@ export class RenderQueue {
 
 	compress() {}
 }
-
-new RenderQueue()
