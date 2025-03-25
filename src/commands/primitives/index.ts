@@ -27,6 +27,7 @@ import { setLineDash } from './set-line-dash'
 import { setTransform } from './set-transform'
 import { stroke } from './stroke'
 import { strokeText } from './strokeText'
+import { tick } from './tick'
 import { transform } from './transform'
 import { translate } from './translate'
 
@@ -60,6 +61,7 @@ export const primitives = {
 	setCtx,
 	stroke,
 	strokeText,
+	tick,
 	transform,
 	translate,
 }
@@ -93,6 +95,7 @@ export * from './set-transform'
 export * from './set-ctx'
 export * from './stroke'
 export * from './strokeText'
+export * from './tick'
 export * from './transform'
 export * from './translate'
 

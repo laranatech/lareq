@@ -1,3 +1,9 @@
+# 1.1.5
+
+- fix: `arrowHead`
+- fix: `pasteBitmap`
+- feature: `tick`
+
 # 1.1.4
 
 - fixed: complex commands

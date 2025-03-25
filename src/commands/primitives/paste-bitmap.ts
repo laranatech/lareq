@@ -1,7 +1,7 @@
-import { Box } from '../../types'
+import { Point } from '../../types'
 
-export type PasteBitmapOpts = Box & {
-	bitmap: Uint8Array
+export type PasteBitmapOpts = Point & {
+	bitmap: Uint8ClampedArray
 	length: number
 	channels: number
 }

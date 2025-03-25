@@ -19,8 +19,8 @@ export const arrow = (options: ArrowOpts) => {
 			q.command.beginPath()
 
 			arrowHead({
-				tip: lastPoint,
-				d: { x: lastPoint.x - prevPoint.x, y: lastPoint.y - prevPoint.y },
+				a: prevPoint,
+				b: lastPoint,
 				length: options.headLength || 8,
 			}).to(q)
 

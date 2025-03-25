@@ -32,6 +32,7 @@ export const CommandByte: Record<CommandType, number> = {
 	transform: 28,
 	translate: 29,
 	ellipse: 30,
+	tick: 31,
 } as const
 
 export const getCommandNameByByte = (n: number): CommandType => {
