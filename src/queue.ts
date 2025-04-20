@@ -1,4 +1,4 @@
-import { CommandType, complex, primitives } from './commands'
+import { CommandByte, CommandType, complex, primitives } from './commands'
 import { makeCommand } from './commands/make-command'
 
 export type RenderCommand = {
@@ -71,5 +71,19 @@ export class RenderQueue {
 		return this.commands
 	}
 
-	compress() {}
+	toCompressed() {
+		const seen = new Set<string>()
+
+        return this.commands.filter((cmd) => {
+            if (cmd.c == CommandByte.setCtx && Object.keys(cmd.o ?? {}).length === 0) {
+                return false
+            }
+            const jsonCmd = JSON.stringify(cmd)
+            if (seen.has(jsonCmd)) {
+                return false
+            }
+            seen.add(jsonCmd)
+            return true
+        })
+	}
 }
