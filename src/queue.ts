@@ -71,5 +71,12 @@ export class RenderQueue {
 		return this.commands
 	}
 
-	compress() {}
+	toCompressed() {
+		return this.commands.filter((c) => {
+			if (c.c !== 25) {
+				return true
+			}
+			return c.o ? Object.keys(c.o).length > 0 : false
+		})
+	}
 }
