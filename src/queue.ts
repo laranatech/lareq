@@ -1,4 +1,4 @@
-import { CommandType, complex, primitives } from './commands'
+import { CommandByte, CommandType, complex, primitives } from './commands'
 import { makeCommand } from './commands/make-command'
 
 export type RenderCommand = {
@@ -72,11 +72,23 @@ export class RenderQueue {
 	}
 
 	toCompressed() {
-		return this.commands.filter((c) => {
-			if (c.c !== 25) {
-				return true
-			}
-			return c.o ? Object.keys(c.o).length > 0 : false
-		})
+		const setCtxFields = new Set<string>()
+        const compressedCmd: RenderCommand[] = []
+
+        for (const cmd of this.commands) {
+            if (cmd.c != CommandByte.setCtx)
+                compressedCmd.push(cmd)
+            else if (cmd.o) {
+                for (const k in cmd.o)
+                    if (setCtxFields.has(k))
+                        delete cmd.o[k as keyof typeof cmd.o]
+                    else
+                        setCtxFields.add(k)
+
+                if (Object.keys(cmd.o).length)
+                    compressedCmd.push(cmd)
+            }
+        }
+        return compressedCmd
 	}
 }
