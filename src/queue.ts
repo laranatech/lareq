@@ -72,11 +72,30 @@ export class RenderQueue {
 	}
 
 	toCompressed() {
-		return this.commands.filter((c) => {
-			if (c.c !== 25) {
-				return true
+		const compressedCommand: RenderCommand[] = []
+		const seenKeyValues = new Set<string>()
+
+		for (const cmd of this.commands) {
+			if (cmd.c !== CommandByte.setCtx) {
+				compressedCommand.push(cmd)
+				continue
 			}
-			return c.o ? Object.keys(c.o).length > 0 : false
-		})
+
+			const newEntries = Object.entries(cmd.o || {}).filter(([key, value]) => {
+				const keyValue = `${key}:${JSON.stringify(value)}`
+
+				if (seenKeyValues.has(keyValue)) return false
+
+				seenKeyValues.add(keyValue)
+
+				return true
+			})
+
+			if (newEntries.length > 0) {
+				compressedCommand.push({ c: cmd.c, o: Object.fromEntries(newEntries) })
+			}
+		}
+
+		return compressedCommand
 	}
 }
