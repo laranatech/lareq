@@ -1,6 +1,16 @@
 import { CommandByte, CommandType, complex, primitives } from './commands'
 import { makeCommand } from './commands/make-command'
 
+type WrappedComplex = {
+	[K in keyof typeof complex]: (o: Parameters<(typeof complex)[K]>[0]) => void
+}
+
+type WrappedPrimitives = {
+	[K in keyof typeof primitives]: (
+		o: Parameters<(typeof primitives)[K]>[0]
+	) => ReturnType<(typeof primitives)[K]>
+}
+
 export type RenderCommand = {
 	/**\
 	 * Command name
@@ -19,28 +29,34 @@ export class RenderQueue {
 
 	complex = this.createComplexCommands(complex)
 
-	createComplexCommands(commands: typeof complex) {
+	createComplexCommands(commands: typeof complex): WrappedComplex {
 		const makeQueueCommand = <T>(command: (o: T) => { to: (q: RenderQueue) => void }) => {
 			return (o: T) => {
 				command(o).to(this)
 			}
 		}
 
-		const result: typeof complex = { ...complex }
+		const result = {} as WrappedComplex
 
-		Object.entries(commands).forEach(([key, value]) => {
-			const name = key as keyof typeof complex
-			const command = value as typeof complex[typeof name]
-
-			// TODO: fix typing
-			//@ts-expect-error todo: fix error
-			result[name] = makeQueueCommand<ReturnType<typeof command>>(command)
-		})
+		type ComplexCommandFn = (o: unknown) => { to: (q: RenderQueue) => void }
+		function wrap<K extends keyof typeof complex>(
+			_name: K,
+			cmd: (typeof complex)[K]
+		): WrappedComplex[K] {
+			return makeQueueCommand<Parameters<(typeof complex)[K]>[0]>(
+				cmd as ComplexCommandFn
+			) as WrappedComplex[K]
+		}
+		for (const name of Object.keys(commands) as (keyof typeof complex)[]) {
+			;(result as Record<keyof typeof complex, WrappedComplex[keyof typeof complex]>)[
+				name
+			] = wrap(name, commands[name])
+		}
 
 		return result
 	}
 
-	createCommands(commands: typeof primitives): typeof primitives {
+	createCommands(commands: typeof primitives): WrappedPrimitives {
 		const makeQueueCommand = <T>(name: CommandType, command: (o: T) => T) => {
 			const c = makeCommand(name, command)
 			return (o: T) => {
@@ -49,16 +65,25 @@ export class RenderQueue {
 				return o
 			}
 		}
-		const result: typeof primitives = { ...primitives }
+		const result = {} as WrappedPrimitives
 
-		Object.entries(commands).forEach(([key, value]) => {
-			const name = key as CommandType
-			const command = value as typeof primitives[typeof name]
-
-			// TODO: fix typing
-			//@ts-expect-error todo: fix error
-			result[name] = makeQueueCommand<ReturnType<typeof command>>(name, command)
-		})
+		function wrapPrimitive<K extends keyof typeof primitives>(
+			name: K,
+			cmd: (typeof primitives)[K]
+		): WrappedPrimitives[K] {
+			return makeQueueCommand<Parameters<(typeof primitives)[K]>[0]>(
+				name,
+				cmd as (o: Parameters<(typeof primitives)[K]>[0]) => Parameters<
+					(typeof primitives)[K]
+				>[0]
+			) as WrappedPrimitives[K]
+		}
+		for (const name of Object.keys(commands) as (keyof typeof primitives)[]) {
+			;(result as Record<
+				keyof typeof primitives,
+				WrappedPrimitives[keyof typeof primitives]
+			>)[name] = wrapPrimitive(name, commands[name])
+		}
 
 		return result
 	}
